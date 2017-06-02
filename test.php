@@ -31,7 +31,7 @@ echo json_encode(newGeoJson($features)); // convert array to json string
 // ---------------------------------
 // FUNCTIONS
 // ---------------------------------
-
+//
 // geojson 
 function newGeoJson($features) {
 	return array(
