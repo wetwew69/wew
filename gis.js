@@ -31,9 +31,16 @@ function mapfunc(data) {
 		
 		switch(feature.geometry.type.toLowerCase()) {
 			case 'point':
-				layer.bindPopup('<table class="table"><thead><tr><th colspan="3" class="bg-success" style="text-align:center; width:400px;">'+ feature.properties.name +'</th></tr></thead><tbody><tr><th scope="row">Owner</th><td>'+ feature.properties.owner +'</td><td rowspan="5" style="text-align:center"><div id="graph-container"><canvas id="crops-graph" width="150" height="100%"></canvas></div></td></tr><tr><th scope="row">Lot Area</th><td>'+ feature.properties.lotarea +'</td></tr><th scope="row">Crop</th><td>' + feature.properties.crop + '</td></tr><th scope="row">Date Planted</th><td>' + feature.properties.dateplanted + '</td></tr><th scope="row">Estimated Harvest Date</th><td>' + feature.properties.dateharvest + '</td></tr><tr><td colspan="3" style="text-align:center"><button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myModalNorm"> Edit Information </button>&nbsp;</td></tr></tbody></table>')
+				layer.bindPopup('<table class="table"><thead><tr><th colspan="3" class="bg-success" style="text-align:center; width:400px;">'+ 
+				feature.properties.name +'</th></tr></thead><tbody><tr><th scope="row">Owner</th><td>'+ 
+				feature.properties.owner +'</td><td rowspan="5" style="text-align:center"><div id="graph-container"><canvas id="crops-graph" width="150" height="100%"></canvas></div></td></tr><tr><th scope="row">Lot Area</th><td>'+ 
+				feature.properties.lotarea +'</td></tr><th scope="row">Crop</th><td>' + 
+				feature.properties.crop + '</td></tr><th scope="row">Date Planted</th><td>' + 
+				feature.properties.dateplanted + '</td></tr><th scope="row">Estimated Harvest Date</th><td>' + 
+				feature.properties.dateharvest + '</td></tr><tr><td colspan="3" style="text-align:center"><button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myModalNorm"> Edit Information </button>&nbsp;</td></tr></tbody></table>')
 				//.on('click', itemClick)
 				.on('click',itemMouseOver)
+				// .on('click', select)
 				//.on('mouseover', itemMouseOverWithChart)
 				//.on('mouseout', itemMouseOut);	
 				break;
@@ -114,7 +121,7 @@ function mapfunc(data) {
 // run scripts when html is ready (this is run first)	
 $(document).ready( function(){ 
 	// fetch our geosjon file
-	$.getJSON("http://mymaps.zzzz.io/gis/test.php", function(data) {
+	$.getJSON("http://localhost/redrootcms/test.php", function(data) {
 		// call mapfunc function and supply geosjon data
 		mapfunc(data);
 	});
