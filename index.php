@@ -277,7 +277,7 @@
 						   <span class="sr-only">Close</span>
 					</button>
 					<h4 class="modal-title" id="myModalLabel">
-						Edit Crop Information
+						Edit Information
 					</h4>
 				</div>
 				<!--<form method = "POST" action = "select.php">
