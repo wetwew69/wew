@@ -6,6 +6,7 @@ function mapfunc(data) {
 	
 	console.log('Init map...');	
 	ctr = 0;
+	aUsername = "";
 	//ctr1 = 0;
 	
 	// instantiate leaflet map
@@ -65,13 +66,14 @@ function mapfunc(data) {
 						layer.on('dblclick', itemDblClick)			
 						layer.on('click',function(e){
 								if (e.originalEvent.ctrlKey) {
-									select(feature.properties.name);
+									select(feature.properties.name, "select.php");
 									e.target.setIcon(greenIcon);
 									//display();
 									}
 								else{
 									//shows display after 2 clicks (FIX THIS)
 									e.target.setIcon(blueIcon);
+									//select(feature.properties.name, "dateTest.php")
 									// switch(feature.geometry.type.toLowerCase()) {									
 										// case 'point':
 											// console.log(feature.properties.name);
@@ -97,7 +99,7 @@ function mapfunc(data) {
 	// new shit---------------------------------------------
 	var markers = L.markerClusterGroup(); // init markerCluster
 	markers.addLayer(geoJsonLayer); // data from geojson
-	mymap.addLayer(mark	ers); // add layer
+	mymap.addLayer(markers); // add layer
 	mymap.fitBounds(markers.getBounds()); // get bounds
 
 
@@ -126,10 +128,22 @@ function mapfunc(data) {
 		console.log("bee");
 	}
 	
-	//select markers
-	function select(iUsername){
+	//prompt date update and display
+	function upDate(iUsername, iDatePlanted){
 			$.ajax({
-				url: "select.php",
+				url: "dateTest.php",
+				type: "POST",
+				data: {
+					'username' : iUsername,
+					'harvestDate': iDatePlanted
+				}
+			});
+		  }
+		  
+	//select markers
+	function select(iUsername, iAddress){
+			$.ajax({
+				url: iAddress,
 				type: "POST",
 				data: {
 					'username' : iUsername
