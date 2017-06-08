@@ -245,7 +245,11 @@
 			</select>
 		  </div>
 		</form>
-
+			<!-- Edit Information Button-->
+			<form class="navbar-form navbar-right" role="button">
+					<button class="btn btn-default" type="button"><i class="btn btn-success btn-xs" data-toggle="modal" data-target="#myModalNorm">Edit Information</i></button>		
+			</form>
+			<!-- Search Input Box-->
 			<form class="navbar-form navbar-right" role="search">
 			<div class="input-group">
 				<input type="text" class="form-control" placeholder="Search" name="q" id="q">
