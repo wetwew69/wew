@@ -5,10 +5,39 @@
 function mapfunc(data) {
 	
 	console.log('Init map...');	
+	ctr = 0;
+	//ctr1 = 0;
 	
 	// instantiate leaflet map
 	var mymap = L.map('mapid').setView([12.862338,121.565984], 6);
 
+	var greenIcon = new L.Icon({
+	  iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png',
+	  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+	  iconSize: [25, 41],
+	  iconAnchor: [12, 41],
+	  popupAnchor: [1, -34],
+	  shadowSize: [41, 41]
+	});
+
+	var blueIcon = new L.Icon({
+	  iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png',
+	  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+	  iconSize: [25, 41],
+	  iconAnchor: [12, 41],
+	  popupAnchor: [1, -34],
+	  shadowSize: [41, 41]
+	});
+	
+	var redIcon = new L.Icon({
+	  iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+	  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+	  iconSize: [25, 41],
+	  iconAnchor: [12, 41],
+	  popupAnchor: [1, -34],
+	  shadowSize: [41, 41]
+	});
+	
 	// setup map
 	L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
 		attribution: 'Tiles &copy; Esri',
@@ -18,57 +47,145 @@ function mapfunc(data) {
 	// supply geojson data to leaflet
 	L.geoJson(data,{
 		pointToLayer: addMarker,
-		onEachFeature: mapFormatting
+		// onEachFeature: function (feature, layer){
+						// layer.on('click', function(e){
+							// refresh(feature.properties.name);
+							// console.log("wap");
+						// })
+		// },
+		onEachFeature: function (feature, layer){
+						refresh(); // reset to not selected on refresh
+						//clearMarkers();
+						switch(feature.geometry.type.toLowerCase()) {									
+										case 'point':
+											layer.bindPopup('<table class="table"><thead><tr><th colspan="3" class="bg-success" style="text-align:center; width:400px;">'+ 
+											feature.properties.name +'</th></tr></thead><tbody><tr><th scope="row">Owner</th><td>'+ 
+											feature.properties.owner +'</td><td rowspan="5" style="text-align:center"><div id="graph-container"><canvas id="crops-graph" width="150" height="100%"></canvas></div></td></tr><tr><th scope="row">Lot Area</th><td>'+ 
+											feature.properties.lotarea +'</td></tr><th scope="row">Crop</th><td>' + 
+											feature.properties.crop + '</td></tr><th scope="row">Date Planted</th><td>' + 
+											feature.properties.dateplanted + '</td></tr><th scope="row">Estimated Harvest Date</th><td>' + 
+											feature.properties.dateharvest + '</td></tr><tr><td colspan="3" style="text-align:center"><button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myModalNorm"> Edit Information </button>&nbsp;</td></tr></tbody></table>'
+											)
+											.on('dblclick', itemDblClick)
+											break;
+									}
+						layer.on('dblclick', itemDblClick)			
+						layer.on('click',function(e){
+								if (e.originalEvent.ctrlKey) {
+									select(feature.properties.name);
+									e.target.setIcon(greenIcon);
+									//display();
+									}
+								else{
+									//shows display after 2 clicks (FIX THIS)
+									e.target.setIcon(blueIcon);
+									// switch(feature.geometry.type.toLowerCase()) {									
+										// case 'point':
+											// console.log(feature.properties.name);
+											// layer.bindPopup('<table class="table"><thead><tr><th colspan="3" class="bg-success" style="text-align:center; width:400px;">'+ 
+											// feature.properties.name +'</th></tr></thead><tbody><tr><th scope="row">Owner</th><td>'+ 
+											// feature.properties.owner +'</td><td rowspan="5" style="text-align:center"><div id="graph-container"><canvas id="crops-graph" width="150" height="100%"></canvas></div></td></tr><tr><th scope="row">Lot Area</th><td>'+ 
+											// feature.properties.lotarea +'</td></tr><th scope="row">Crop</th><td>' + 
+											// feature.properties.crop + '</td></tr><th scope="row">Date Planted</th><td>' + 
+											// feature.properties.dateplanted + '</td></tr><th scope="row">Estimated Harvest Date</th><td>' + 
+											// feature.properties.dateharvest + '</td></tr><tr><td colspan="3" style="text-align:center"><button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myModalNorm"> Edit Information </button>&nbsp;</td></tr></tbody></table>'
+											// )
+											// .on('dblclick', itemDblClick)
+											// break;
+									// }
+								}
+							}
+						)
+					}
 	}).addTo(mymap);
-
+	
 	// function to add marker
 	function addMarker(feature, latlng) {
 		return L.marker(latlng, {})
 	}
-
-	// function to format popups
-	function mapFormatting(feature,layer) {
-		
-		switch(feature.geometry.type.toLowerCase()) {
-			case 'point':
-				layer.bindPopup('<table class="table"><thead><tr><th colspan="3" class="bg-success" style="text-align:center; width:400px;">'+ 
-				feature.properties.name +'</th></tr></thead><tbody><tr><th scope="row">Owner</th><td>'+ 
-				feature.properties.owner +'</td><td rowspan="5" style="text-align:center"><div id="graph-container"><canvas id="crops-graph" width="150" height="100%"></canvas></div></td></tr><tr><th scope="row">Lot Area</th><td>'+ 
-				feature.properties.lotarea +'</td></tr><th scope="row">Crop</th><td>' + 
-				feature.properties.crop + '</td></tr><th scope="row">Date Planted</th><td>' + 
-				feature.properties.dateplanted + '</td></tr><th scope="row">Estimated Harvest Date</th><td>' + 
-				feature.properties.dateharvest + '</td></tr><tr><td colspan="3" style="text-align:center"><button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myModalNorm"> Edit Information </button>&nbsp;</td></tr></tbody></table>')
-				//.on('click', itemClick)
-				.on('click',itemMouseOver)
-				// .on('click', select)
-				//.on('mouseover', itemMouseOverWithChart)
-				//.on('mouseout', itemMouseOut);	
-				break;
-		}	
-
-		
+	
+	//refresh markers
+	function clearMarkers(e){
+		e.target.setIcon(greenIcon);
+		console.log("bee");
+	}
+	
+	//select markers
+	function select(iUsername){
+			$.ajax({
+				url: "select.php",
+				type: "POST",
+				data: {
+					'username' : iUsername
+				}
+			});
+	}
+	//call refresh page
+	function refresh(){
+		$.ajax({
+			url: "refresh.php"
+		});
+	}
+	
+	// function to zoom when marker gets doubleclicked
+	function itemDblClick(e){
+		e.target.setIcon(redIcon);
+		mymap.setView(e.latlng, 12);
 	}
 	
 	// function to zoom when marker get clicked
-	function itemClick(e){
-		mymap.setView(e.latlng, 14);
-	}	
+	//function itemClick(e){
+		//if (e.originalEvent.ctrlKey) {
+			//var passName = feature.properties.name;
+			//console.log(passName);
+			//alert("The CTRL key was pressed!");
+			
+		// } 
+		// else {
+        
+			// e.target.closePopup();
+		// }
+		//console.log(e);
+		//mymap.setView(e.latlng, 14);
+	// }
+	
+	
+	// function itemMouseDown(e){
+		// if (e.originalEvent.ctrlKey) {
+			// if(feature.properties.name == null)
+				// alert('yes');
+			// else
+				// alert('no');
+			//select();
+			//console.log(usernameProp);
+		// } 
+		// else {
+        
+			//e.target.closePopup();
+			
+			//alert(select());
+		// }
+		//console.log(e);
+		//mymap.setView(e.latlng, 14);
+	// }	
+
 	
 	// function to open popup when mouse is hovered over a marker
-	function itemMouseOver(e){
-		e.target.openPopup();
-	}
+	// function itemMouseOver(e){
+		//e.target.openPopup();
+		//select();
+	// }
 
 	// function to open popup when mouse is hovered over a polygon
-	function itemMouseOverWithChart(e){
-		e.target.openPopup();
-		loadChart();
-	}
+	// function itemMouseOverWithChart(e){
+		//e.target.openPopup();
+		// loadChart();
+	// }
 	
 	// function to close popup when mouse is outside marker
-	function itemMouseOut(e){
-		e.target.closePopup();
-	}
+	// function itemMouseOut(e){
+		// e.target.closePopup();
+	// }
 
 	//**************** not working yet ***************
 	// on hover infobox upper right
@@ -121,7 +238,7 @@ function mapfunc(data) {
 // run scripts when html is ready (this is run first)	
 $(document).ready( function(){ 
 	// fetch our geosjon file
-	$.getJSON("http://localhost/redrootcms/test.php", function(data) {
+	$.getJSON("http://localhost/redrootcms/test.php?v="+Math.random(), function(data) {
 		// call mapfunc function and supply geosjon data
 		mapfunc(data);
 	});
