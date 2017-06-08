@@ -22,19 +22,26 @@ $cropSelected = $_GET['crop'];
 	
 	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css" rel="stylesheet" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.3/leaflet.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.3/leaflet.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.0.5/MarkerCluster.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.0.5/MarkerCluster.Default.css" rel="stylesheet" />
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
-	
+
 	<style>
 	
 	html, body { 
 		overflow: hidden;
 		height: 100%;
 		width: 100%;
-	}	
+	}
+	
+	table {
+    border: 1px solid black;
+	}
+
 
 	.navbar {
 		margin-bottom: 0px;
@@ -51,7 +58,8 @@ $cropSelected = $_GET['crop'];
 		-webkit-border-radius: 0 !important;
 		-moz-border-radius: 0 !important;
 		border-radius: 0 !important;
-	}		
+	}
+
 	</style>
 </head>
 
@@ -148,11 +156,19 @@ $cropSelected = $_GET['crop'];
         </div>
     </div>
 </div>
-</div>	
+</div>
+<!-- Table for Information
+<table id="t01">
+  <tr>
+    <th></th>
+  </tr>
+</table>-->
+	
     <script src="ui.js"></script>	
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.3/leaflet.js"></script>	
-	<script src="gis.js?v=51"></script>
+  <script src="http://leaflet.github.io/Leaflet.markercluster/dist/leaflet.markercluster-src.js"></script>
+	<script src="gis.js?v=<?php echo time(); ?>"></script>
 </body>
 
 </html>

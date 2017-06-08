@@ -45,7 +45,7 @@ function mapfunc(data) {
 		}).addTo(mymap); 
 
 	// supply geojson data to leaflet
-	L.geoJson(data,{
+	var geoJsonLayer = L.geoJson(data,{
 		pointToLayer: addMarker,
 		// onEachFeature: function (feature, layer){
 						// layer.on('click', function(e){
@@ -54,63 +54,65 @@ function mapfunc(data) {
 						// })
 		// },
 		onEachFeature: function (feature, layer){
-						refresh(); // reset to not selected on refresh
-						//clearMarkers();
-						switch(feature.geometry.type.toLowerCase()) {									
-										case 'point':
-											layer.bindPopup('<table class="table"><thead><tr><th colspan="3" class="bg-success" style="text-align:center; width:400px;">'+ 
-											feature.properties.name +'</th></tr></thead><tbody><tr><th scope="row">Owner</th><td>'+ 
-											feature.properties.owner +'</td><td rowspan="5" style="text-align:center"><div id="graph-container"><canvas id="crops-graph" width="150" height="100%"></canvas></div></td></tr><tr><th scope="row">Lot Area</th><td>'+ 
-											feature.properties.lotarea +'</td></tr><th scope="row">Crop</th><td>' + 
-											feature.properties.crop + '</td></tr><th scope="row">Date Planted</th><td>' + 
-											feature.properties.dateplanted + '</td></tr><th scope="row">Estimated Harvest Date</th><td>' + 
-											feature.properties.dateharvest + '</td></tr><tr><td colspan="3" style="text-align:center"><button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myModalNorm"> Edit Information </button>&nbsp;</td></tr></tbody></table>'
-											)
-											.on('dblclick', itemDblClick)
-											break;
-									}
-						layer.on('dblclick', itemDblClick)			
-						layer.on('click',function(e){
-								if (e.originalEvent.ctrlKey) {
-									select(feature.properties.name);
-									e.target.setIcon(greenIcon);
-									//display();
-									}
-								else{
-									//shows display after 2 clicks (FIX THIS)
-									e.target.setIcon(blueIcon);
-									// switch(feature.geometry.type.toLowerCase()) {									
-										// case 'point':
-											// console.log(feature.properties.name);
-											// layer.bindPopup('<table class="table"><thead><tr><th colspan="3" class="bg-success" style="text-align:center; width:400px;">'+ 
-											// feature.properties.name +'</th></tr></thead><tbody><tr><th scope="row">Owner</th><td>'+ 
-											// feature.properties.owner +'</td><td rowspan="5" style="text-align:center"><div id="graph-container"><canvas id="crops-graph" width="150" height="100%"></canvas></div></td></tr><tr><th scope="row">Lot Area</th><td>'+ 
-											// feature.properties.lotarea +'</td></tr><th scope="row">Crop</th><td>' + 
-											// feature.properties.crop + '</td></tr><th scope="row">Date Planted</th><td>' + 
-											// feature.properties.dateplanted + '</td></tr><th scope="row">Estimated Harvest Date</th><td>' + 
-											// feature.properties.dateharvest + '</td></tr><tr><td colspan="3" style="text-align:center"><button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myModalNorm"> Edit Information </button>&nbsp;</td></tr></tbody></table>'
-											// )
-											// .on('dblclick', itemDblClick)
-											// break;
-									// }
-								}
-							}
-						)
-					}
-	}).addTo(mymap);
+			//refresh(0); // reset to not selected on refresh
+
+			layer.on('click',function(e){
+
+				if (e.originalEvent.ctrlKey) {
+					//select(feature.properties.name);
+					e.originalEvent.preventDefault();
+					e.target.setIcon(greenIcon);
+					console.log(e);
+					return;
+				} else {
+					e.target.setIcon(blueIcon);
+				}							
+			})			
+			//shows display after 2 clicks (BUG!!!)						
+			switch(feature.geometry.type.toLowerCase()) {									
+				case 'point':
+					//feature.properties.isSelected = 1;
+					layer.bindPopup('<table class="table"><thead><tr><th colspan="3" class="bg-success" style="text-align:center; width:400px;">'+ 
+					feature.properties.name +'</th></tr></thead><tbody><tr><th scope="row">Owner</th><td>'+ 
+					feature.properties.owner +'</td><td rowspan="5" style="text-align:center"><div id="graph-container"><canvas id="crops-graph" width="150" height="100%"></canvas></div></td></tr><tr><th scope="row">Lot Area</th><td>'+ 
+					feature.properties.lotarea +'</td></tr><th scope="row">Crop</th><td>' + 
+					feature.properties.crop + '</td></tr><th scope="row">Date Planted</th><td>' + 
+					feature.properties.dateplanted + '</td></tr><th scope="row">Estimated Harvest Date</th><td>' + 
+					feature.properties.dateharvest + '</td></tr><tr><td colspan="3" style="text-align:center"><button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myModalNorm"> Edit Information </button>&nbsp;</td></tr></tbody></table>'
+					)
+					//.on('mouseout', itemMouseOut)
+					.on('dblclick', itemDblClick);
+					//console.log(feature.properties.name);
+					console.log('test');
+					break;
+			}
+		}
+	}); // removed addTo map, let markerCluster add info to map
 	
+	var markers = L.markerClusterGroup(); // init markerCluster
+	markers.addLayer(geoJsonLayer); // data from geojson
+	mymap.addLayer(markers); // add layer
+	mymap.fitBounds(markers.getBounds()); // get bounds
+
+
+	function getRandomLatLng(map) {
+		var bounds = map.getBounds(),
+			southWest = bounds.getSouthWest(),
+			northEast = bounds.getNorthEast(),
+			lngSpan = northEast.lng - southWest.lng,
+			latSpan = northEast.lat - southWest.lat;
+
+		return new L.LatLng(
+				southWest.lat + latSpan * Math.random(),
+				southWest.lng + lngSpan * Math.random());
+	}
+
 	// function to add marker
 	function addMarker(feature, latlng) {
 		return L.marker(latlng, {})
 	}
+
 	
-	//refresh markers
-	function clearMarkers(e){
-		e.target.setIcon(greenIcon);
-		console.log("bee");
-	}
-	
-	//select markers
 	function select(iUsername){
 			$.ajax({
 				url: "select.php",
@@ -119,11 +121,14 @@ function mapfunc(data) {
 					'username' : iUsername
 				}
 			});
+		console.log(iUsername);
 	}
-	//call refresh page
-	function refresh(){
+	
+	function refresh(iBoolean){
 		$.ajax({
-			url: "refresh.php"
+			url: "select.php",
+			type: "POST",
+			data: { 'isSelected' : iBoolean}
 		});
 	}
 	
@@ -183,9 +188,10 @@ function mapfunc(data) {
 	// }
 	
 	// function to close popup when mouse is outside marker
-	// function itemMouseOut(e){
-		// e.target.closePopup();
-	// }
+	function itemMouseOut(e){
+		//e.target.setIcon(blueIcon);
+		e.target.closePopup();
+	}
 
 	//**************** not working yet ***************
 	// on hover infobox upper right
@@ -197,11 +203,12 @@ function mapfunc(data) {
 		return this._div;
 	};
 	info.update = function (props) {
-		this._div.innerHTML = '<h4>Crop Information</h4>' +  (props ?
+		this._div.innerHTML = '<h4>Information</h4>' +  (props ?
 			'<b>' + props.name + '</b><br />' + props.density + ' people / mi<sup>2</sup>'
 			: 'Click an area to show more info');
 	};
-	info.addTo(mymap);		
+	info.addTo(mymap);
+
 	//**************** not working yet ***************
 	
 	// chart demo - function to add chart functionality in polygon popups
@@ -215,7 +222,7 @@ function mapfunc(data) {
 		canvas = document.querySelector('#crops-graph'); // why use jQuery?
 		ctx = canvas.getContext('2d');
 		var myChart = new Chart(ctx, {
-		  type: 'bar',
+		  type: 'pie',
 		  data: {
 			labels: ["M", "T", "W", "R", "F", "S", "S"],
 			datasets: [{
@@ -238,7 +245,7 @@ function mapfunc(data) {
 // run scripts when html is ready (this is run first)	
 $(document).ready( function(){ 
 	// fetch our geosjon file
-	$.getJSON("http://localhost/redrootcms/test.php?v="+Math.random(), function(data) {
+	$.getJSON("http://mymaps.zzzz.io/maps/geojson.php?v="+Math.random(), function(data) {
 		// call mapfunc function and supply geosjon data
 		mapfunc(data);
 	});
