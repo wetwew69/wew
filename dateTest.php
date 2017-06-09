@@ -14,7 +14,7 @@
 	//get from gis.js or index.php
 	$dUsername = $_POST['username'];
 	$dPlantingDate = $_POST['plantingDate'];
-	echo $dUsername;
+	//echo $dUsername;
 	$upDate = "update landareadetails set plantingDate = '$dPlantingDate' where username = '$dUsername'";
 	$upDateCommand = $conn->query($upDate);
 	
@@ -24,7 +24,7 @@
 	if($fetchDateQuery->num_rows > 0){
 		while($row = $fetchDateQuery->fetch_assoc()){
 			$fetchResult = $row["plantingDate"];
-			echo "old date: $fetchResult <br>";
+			//echo "old date: $fetchResult <br>";
 		}
 	}
 	$setDate = "select date_add('$fetchResult', interval 3 month)"; 
@@ -33,7 +33,7 @@
 	if($setDateQuery->num_rows > 0){
 		while($row = $setDateQuery->fetch_assoc()){
 			$harvestDate = $row["date_add('$fetchResult', interval 3 month)"];
-			echo "new date: $harvestDate <br>";
+			//echo "new date: $harvestDate <br>";
 		}
 	}
 	

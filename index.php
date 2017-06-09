@@ -32,29 +32,6 @@
 			}
 		}
 		
-		
-		// if(empty($_POST['cropName'])){
-			// $cnErr = "Crop name required";
-			// $hasError = true;
-		// }else{
-			// $cropName = test_input($_POST['cropName']);
-			// if (!preg_match("/^[a-zA-Z ]*$/",$cropName)) {
-				// $cnErr = "Only letters and white space allowed";
-				// $hasError = true;
-			// }
-		// }
-		
-		// if(empty($_POST['harvestDate'])){
-			// $hdErr = "Harvest date required";
-			// $hasError = true;
-		// }else{
-			// $harvestDate = test_input($_POST['harvestDate']);
-			// if(!isDateValid($harvestDate)){
-				// $hasError = true;
-				// $hdErr = "Invalid date format";
-			// }
-		// }
-		
 		if(empty($_POST['plantingDate'])){
 			$pdERr = "Planting date required";
 			$hasError = true;
@@ -193,35 +170,6 @@
 							}});
 				});
 		  }
-		 
-		  
-		  // not working
-		  // function displayDatePredition(){
-			  // $(document).ready(function(){
-				  // $.ajax({
-					  // url: "dateTest.php", 
-					  // type: "POST",
-					  // data: {
-						  // 'username' : 
-					  // }success: function(result){
-					  // $("#dDatePrediction").html(result);
-				  // }});
-			  // });
-		  // }
-		  
-		  // function clearMarkers(){
-			  // $.(document).ready(function(){
-				  // $.ajax({ url: "gis.js", success: function(){
-					  // fire green to blue
-				  // }});
-			  // });
-		  // }
-		  
-		  // function multipleCall(){
-			  // clearSelection();
-			  // clearMarkers(); 
-			  
-		  // }
 		  
 		  
 		  </script>
@@ -245,11 +193,30 @@
 			</select>
 		  </div>
 		</form>
-			<!-- Edit Information Button-->
-			<form class="navbar-form navbar-right" role="button">
-					<button class="btn btn-default" type="button"><i class="btn btn-success btn-xs" data-toggle="modal" data-target="#myModalNorm">Edit Information</i></button>		
-			</form>
-			<!-- Search Input Box-->
+<!-- Edit Information Button-->
+ 		<form class="navbar-form navbar-right" role="button">
+ 					<button class="btn btn-default" type="button"><i class="btn btn-success btn-xs" data-toggle="modal" data-target="#myModalNorm">Edit Information</i></button>		      
+ 		</form>
+		<script>
+		function ohmy(){
+			$("#formoid").submit(function(event){
+				console.log("beep");
+				event.preventDefault();
+				var url= "dateTest.php";
+				$.ajax({
+					type: "POST",
+					url: url,
+					data: $("#formoid").serialize(),
+					success: function(result){
+						$("#oHarvestDate").html(result);
+					}
+				});
+				
+			
+			});
+		}
+		</script>
+<!-- -->
 			<form class="navbar-form navbar-right" role="search">
 			<div class="input-group">
 				<input type="text" class="form-control" placeholder="Search" name="q" id="q">
@@ -277,23 +244,18 @@
 						   <span class="sr-only">Close</span>
 					</button>
 					<h4 class="modal-title" id="myModalLabel">
-						Edit Information
+						Edit Crop Information
 					</h4>
 				</div>
-				<!--<form method = "POST" action = "select.php">
-						<button type="submit" class="btn btn-default"  value = "john1"
-							data-dismiss="modal">
-								Select this nigga
-						</button>
-				</form>-->
+				
 				<!-- Modal Body -->
 				<div class="modal-body">
 					<p> <span class = "error">* Required Field </span></p>
-					<form method = "post" action = "dateTest.php">
+					<form id = "formoid" method = "post" action = "dateTest.php">
 					  <div class="form-group">
 						<label for="exampleInputEmail1">Username</label>
 						  <span class="error">* <?php echo $cnErr;?></span>
-						  <input type="text" class="form-control"
+						  <input id = "username" type="text" class="form-control"
 						  id="exampleInputEmail1" placeholder="Enter crop name"
 						  name = "username" value = "<?PHP echo $username?>"/>
 					  </div>
@@ -303,7 +265,7 @@
 						</div>
 						<label for="exampleInputEmail1">Planting Date</label>
 						  <span class="error">* <?php echo $pdERr;?></span>
-						  <input type="text" class="form-control"
+						  <input id = "plantingDate" type="text" class="form-control"
 						  id="exampleInputEmail1" placeholder="Enter Date"
 						  name = "plantingDate" value = "<?PHP echo $plantingDate?>"/>
 					  </div>
@@ -328,34 +290,13 @@
 							data-dismiss="modal">
 								Close
 						</button>
-						<button type = "submit" class="btn btn-primary">
+						<button onCLick = "ohmy()" class="btn btn-primary">
 							Save changes
 						</button>
 						</div>
 					  <!-- submit and close button--->
 					</form>
-					<!--
-					<form method = "POST" action = "select.php">
 					
-						<button type="submit" class="btn btn-default"
-							data-dismiss="modal">
-								Select this nigga
-						</button>
-					</form>-->
-					
-					
-				</div>
-				
-				<!-- Modal Footer 
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default"
-							data-dismiss="modal">
-								Close
-					</button>
-					<button type="button" class="btn btn-primary">
-						Save changes
-					</button>
-				</div>-->
 			</div>
 		</div>
 	</div>
