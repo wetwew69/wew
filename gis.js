@@ -58,7 +58,7 @@ function mapfunc(data) {
 											feature.properties.lotarea +'</td></tr><th scope="row">Crop</th><td>' + 
 											feature.properties.crop + '</td></tr><th scope="row">Date Planted</th><td>' + 
 											feature.properties.dateplanted + '</td></tr><th scope="row">Estimated Harvest Date</th><td>' + 
-											feature.properties.dateharvest + '</td></tr></tbody></table>'       //<tr><td colspan="3" style="text-align:center"><button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myModalNorm"> Edit Information </button>&nbsp;</td></tr>
+											feature.properties.dateharvest + '</td></tr></tbody></table>'
 											)
 											.on('dblclick', itemDblClick)
 											break;
