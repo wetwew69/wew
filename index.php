@@ -13,7 +13,7 @@
 	//variable definition
 	$harvestDate = $plantingDate = $cropName = $username = "";
 	$hdErr = $pdERr = $cnErr = "";
-
+	$month = "";
 	
 		// include 'test.php';
 		// print_r($features[0]['properties']['name']);
@@ -50,12 +50,6 @@
 			
 		}
 		else{
-		// "<script type=\'text/javascript\'>
-				// confirm("REGISTERED SUCCESSFULLY!! ( ͡° ͜ʖ ͡°)");
-		// </script>"
-				
-			// $command = "insert into landareadetails(cropName, plantingDate, harvestDate)
-						// values('$cropName', '$plantingDate', '$harvestDate')";
 			$command = "update landareadetails set usercrop = '$cropName', plantingdate = '$plantingDate', harvestdate = '$harvestDate' 
 						where username = '$username'";
 			$result = $conn->query($command);
@@ -147,7 +141,58 @@
 		</style>
 	</head>
 
+	
+	
 	<body>
+	
+	<!---->
+	
+			<script>
+		function computeVolume(){
+			$("#volume").submit(function(event){
+				console.log("beep");
+				event.preventDefault();
+				var url= "volumesum.php";
+				$.ajax({
+					type: "POST",
+					url: url,
+					data: $("#volume").serialize(),
+					success: function(result){
+						$("#displayVolume").html(result);
+					}
+				});
+				
+			
+			});
+		}
+		</script>
+	
+	<nav class="navbar navbar-default" role="navigation">
+  <div class="container-fluid">
+  <form id = "volume" class="navbar-form navbar-left" role="button" method = "post" action ="volumesum.php">
+  <div class="btn-group">
+  
+    <button type="submit" onClick = "computeVolume()" class="btn btn-primary" name = "month" value = <?PHP echo $month = "January"; ?> >January</button>
+    <button type="submit" class="btn btn-primary" name = "month" value = "February" >February</button>
+    <button type="submit" class="btn btn-primary" name = "month" value = "March" >March</button>
+	<button type="submit" class="btn btn-primary" name = "month" value = "April" >April</button>
+    <button type="submit" class="btn btn-primary" name = "month" value = "May" >May</button>
+    <button type="submit" class="btn btn-primary" name = "month" value = "June" >June</button>
+	<button type="submit" class="btn btn-primary" name = "month" value = "July" >July</button>
+    <button type="submit" class="btn btn-primary" name = "month" value = "August" >August</button>
+    <button type="submit" class="btn btn-primary" name = "month" value = "September" >September</button>
+	<button type="submit" class="btn btn-primary" name = "month" value = "October" >October</button>
+    <button type="submit" class="btn btn-primary" name = "month" value = "November" >November</button>
+    <button type="submit" class="btn btn-primary" name = "month" value = "December" >December</button>
+    <button type="submit" class="btn btn-primary" name = "total" value = "TOTAL" >TOTAL</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<label> Volume: </label>
+	<label id = "displayVolume"> 0000 units</label>
+  </div>
+  </form>
+</div>
+      </div>
+	<!---->
+	
 	<nav class="navbar navbar-default" role="navigation">
 	  <div class="container-fluid">
 		<div class="navbar-header">
@@ -162,11 +207,20 @@
 				});
 		  }
 		  
+		  function displayVolume(){
+			  $(document).ready(function(){
+						$.ajax({url: "displaySelectedVolume.php", success: function(result){
+							$("#buttonVolume").html(result);
+							}});
+				});
+		  }
+		  
 		  function clearSelection(){
 			  $(document).ready(function(){
 						$.ajax({url: "refresh.php", success: function(result){
 							
 							$("#sumDisplay").html(result);
+							$("#buttonVolume").html(result);
 							}});
 				});
 		  }
@@ -175,12 +229,13 @@
 		  </script>
 		  
 		 
-		  <button onClick = "display()" id = "sumDisplay"> DISPLAY </button>
+		  <button onClick = "display()" id = "sumDisplay"> Land Area </button>
+		  <button onClick = "displayVolume()" id = "buttonVolume"> Volume </button>
 		  
 		  <button onCLick = "clearSelection()"> Clear </button>
 		  
 		</div>
-
+<!--
 	   <form class="navbar-form navbar-left" role="search">
 		  <div class="form-group">
 			<select class="form-control" id="crop" name="crop" onchange="this.form.submit()">
@@ -193,12 +248,13 @@
 			</select>
 		  </div>
 		</form>
+		-->
 <!-- Edit Information Button-->
  		<form class="navbar-form navbar-right" role="button">
  					<button class="btn btn-default" type="button"><i class="btn btn-success btn-xs" data-toggle="modal" data-target="#myModalNorm">Edit Information</i></button>		      
  		</form>
 		<script>
-		function ohmy(){
+		function saveDate(){
 			$("#formoid").submit(function(event){
 				console.log("beep");
 				event.preventDefault();
@@ -217,6 +273,7 @@
 		}
 		</script>
 <!-- -->
+<!--
 			<form class="navbar-form navbar-right" role="search">
 			<div class="input-group">
 				<input type="text" class="form-control" placeholder="Search" name="q" id="q">
@@ -225,6 +282,7 @@
 				</div>
 			</div>
 			</form>
+			-->
 
 	  </div>
 	</nav>
@@ -256,7 +314,7 @@
 						<label for="exampleInputEmail1">Username</label>
 						  <span class="error">* <?php echo $cnErr;?></span>
 						  <input id = "username" type="text" class="form-control"
-						  id="exampleInputEmail1" placeholder="Enter crop name"
+						  id="exampleInputEmail1" placeholder="Enter username"
 						  name = "username" value = "<?PHP echo $username?>"/>
 					  </div>
 					  <div class="form-group">
@@ -290,7 +348,7 @@
 							data-dismiss="modal">
 								Close
 						</button>
-						<button onCLick = "ohmy()" class="btn btn-primary">
+						<button onCLick = "saveDate()" class="btn btn-primary">
 							Save changes
 						</button>
 						</div>
